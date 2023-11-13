@@ -20,8 +20,7 @@ def serper(query: str):
     }
 
     response = requests.request("POST", url, headers=headers, data=payload)
-    output = response.json()
-    return output
+    return response.json()
 
 def contains_chinese(query: str):
     '''
@@ -39,24 +38,29 @@ def extract_components_from_serper(serper_response: dict):
     for item in serper_response.get("organic"):
         if "link" in item:
             links.append(item["link"])
-        
+
         if "title" in item:
             titles.append(item["title"])
-        
+
         if "snippet" in item:
             snippets.append(item["snippet"])
-        
+
         # if "imageUrl" in item:
         #     icons.append(item["imageUrl"])
         # else:
         #     icons.append("") # some webpages don't have icons
-    
+
     query = serper_response.get("searchParameters")["q"]
     count = len(links)
     language = "zh-cn" if contains_chinese(query) else "en-us"
-    output_dict = {'query': query, 'language': language, 'count': count, 'titles': titles, 'links': links, 'snippets': snippets}
-
-    return output_dict
+    return {
+        'query': query,
+        'language': language,
+        'count': count,
+        'titles': titles,
+        'links': links,
+        'snippets': snippets,
+    }
 
 # Testing this code:
 if __name__ == "__main__":

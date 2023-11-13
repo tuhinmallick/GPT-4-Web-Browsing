@@ -6,17 +6,15 @@ def locate_source(gpt_answer: str, serper_response: dict):
     返回GPT回答中所有「带引用句子」的「信息来源的列表」，如网页标题、url、时间戳、引用的原文等
     '''
     splitted_answer = gpt_answer.split("\nReferences:") # 将GPT的回答分为正文部分&引用部分
-    
+
     if(len(splitted_answer) != 2): return -1
-    
+
     answer_content = splitted_answer[0] # 正文部位
     answer_references = splitted_answer[1] # 引用部位
 
     sentences_with_index = handle_sentences_in_answer(answer_content)
     sentences_with_references = match_references(answer_references, sentences_with_index)
-    reference_cards = match_web_info(sentences_with_references, serper_response)
-
-    return reference_cards
+    return match_web_info(sentences_with_references, serper_response)
 
 def handle_sentences_in_answer(answer_content: str):
     '''
@@ -76,12 +74,21 @@ def match_web_info(sentences_with_references: list, serper_response: dict):
     整理好最终的、每个引用处将会显示的来源信息。如果感觉这个函数比较费解（这个是简写版），可以看上面注释掉的那个）
     '''
     url_index_list = serper_response['links']
-    reference_cards = [{'titles': serper_response['titles'][url_index_list.index(reference['url'])],
-                       'time': serper_response['time'][url_index_list.index(reference['url'])],
-                       'snippets': serper_response['snippets'][url_index_list.index(reference['url'])],
-                       **reference} for reference in sentences_with_references]
-
-    return reference_cards
+    return [
+        {
+            'titles': serper_response['titles'][
+                url_index_list.index(reference['url'])
+            ],
+            'time': serper_response['time'][
+                url_index_list.index(reference['url'])
+            ],
+            'snippets': serper_response['snippets'][
+                url_index_list.index(reference['url'])
+            ],
+            **reference,
+        }
+        for reference in sentences_with_references
+    ]
 
 if __name__ == "__main__":
     
