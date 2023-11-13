@@ -15,7 +15,7 @@ def embeddding_retrieval(contents_list: list, link_list: list, query: str):
         chunk_size = 1000,
         chunk_overlap = 0
     )
-    
+
     # Mark the chunks with thier webpage index:
     metadatas=[{'url': link} for link in link_list] # VERY IMPORTANT!
     texts = text_splitter.create_documents(contents_list, metadatas=metadatas) # No need to read a document
@@ -27,10 +27,8 @@ def embeddding_retrieval(contents_list: list, link_list: list, query: str):
         OpenAIEmbeddings(model='text-embedding-ada-002', openai_api_key='')
     )
 
-    retriever = db.as_retriever(search_kwargs={"k": TOP_K}) 
-    relevant_docs_list = retriever.get_relevant_documents(query)
-
-    return relevant_docs_list
+    retriever = db.as_retriever(search_kwargs={"k": TOP_K})
+    return retriever.get_relevant_documents(query)
 
 
 # Testing this code:

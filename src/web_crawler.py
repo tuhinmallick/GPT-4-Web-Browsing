@@ -50,14 +50,11 @@ def get_webpage_html(url: str):
         return response
     
 def convert_html_to_soup_obj(html: requests.Response):
-    html_string = html.text    
-    # html_soup = BeautifulSoup(html_string, "html.parser")
-    html_soup = BeautifulSoup(html_string, "lxml")
-    return html_soup
+    html_string = html.text
+    return BeautifulSoup(html_string, "lxml")
 
 def convert_soup_to_text(html_soup: BeautifulSoup):
-    html_text_content = html_soup.get_text(strip=True)
-    return html_text_content
+    return html_soup.get_text(strip=True)
 
 def extract_page_title_as_text(html_soup: BeautifulSoup):
     html_page_title = html_soup.head.title.string
@@ -81,17 +78,11 @@ def extract_and_format_main_content_as_text(html_soup: BeautifulSoup, rule: int)
             main_content.append(tag_text)
 
     main_content_text = "\n".join(main_content)
-    main_content_text = re.sub("\n{2,}", "\n", main_content_text) # remove consecutive blank lines
-
-    return main_content_text
+    return re.sub("\n{2,}", "\n", main_content_text)
 
 def extract_time_stamp(html_soup: BeautifulSoup):
-    time_tag = html_soup.find("time")
-
-    if time_tag:
-        time_stamp = time_tag.get("datetime")
-        # datetime_obj = datetime.fromisoformat(time_stamp)
-        return time_stamp
+    if time_tag := html_soup.find("time"):
+        return time_tag.get("datetime")
     else:
         return None
 

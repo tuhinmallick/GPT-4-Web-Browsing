@@ -52,14 +52,19 @@ def format_reference(relevant_docs_list: list, link_list: list):
     reference_content_list = [relevant_docs_list[i].page_content for i in range(TOP_K)]
     reference_index_list = [link_list.index(link)+1 for link in reference_url_list]
     rearranged_index_list = rearrange_index(reference_index_list)
-    
+
     # sorted_contents = [content for _, content in sorted(zip(reference_index_list, reference_content_list))]
     # sorted_index_list = [sorted(set(reference_index_list)).index(i) + 1 for i in reference_index_list]
 
     formatted_reference = "\n"
 
     for i in range(TOP_K):
-        formatted_reference += ('Webpage[' + str(rearranged_index_list[i]) + '], url: ' + reference_url_list[i] + ':\n' + reference_content_list[i] + '\n\n\n')
+        formatted_reference += (
+            f'Webpage[{str(rearranged_index_list[i])}], url: {reference_url_list[i]}'
+            + ':\n'
+            + reference_content_list[i]
+            + '\n\n\n'
+        )
 
     return formatted_reference
 
@@ -69,7 +74,7 @@ def rearrange_index(original_index_list: list):
 
     for index in original_index_list:
         if index not in index_dict: 
-            index_dict.update({index: len(index_dict)+1})
+            index_dict[index] = len(index_dict)+1
             rearranged_index_list.append(len(index_dict))
         else:
             rearranged_index_list.append(index_dict[index])

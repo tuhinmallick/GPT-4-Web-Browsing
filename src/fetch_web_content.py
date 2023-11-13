@@ -82,10 +82,9 @@ def fetch_web_content(query: str):
             if serper_results is not None:
                 # 如果成功，跳出循环
                 break
-            else:
-                # 如果失败，等待一段时间后重试
-                attempts += 1
-                time.sleep(1)  # 等待2秒后重试
+            # 如果失败，等待一段时间后重试
+            attempts += 1
+            time.sleep(1)  # 等待2秒后重试
 
         if serper_results is not None:
             # 在这里可以继续处理成功的结果
@@ -96,7 +95,7 @@ def fetch_web_content(query: str):
         return serper_response
 
     def crawl_threads_launcher(url_list: list):
-        
+
         # Create and start threads:
         threads = []
 
